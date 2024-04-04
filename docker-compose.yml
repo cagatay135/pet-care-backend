@@ -5,8 +5,6 @@ services:
     image: postgres:latest
     container_name: database
     restart: always
-    ports:
-      - "5432:5432"
     env_file:
       - .env
     environment:
@@ -19,7 +17,7 @@ services:
       - petcareNetwork
 
   petcare:
-    image: 'petcare:latest'
+    image: 'petcare_backend'
     build:
       context: .
       dockerfile: Dockerfile
@@ -30,12 +28,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - server.port=8080
-      - spring.datasource.username=${DATABASE_USERNAME}
-      - spring.datasource.password=${DATABASE_PASSWORD}
-      - spring.datasource.url=jdbc:postgresql://database:5432/petcare
-      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-      - spring.jpa.hibernate.ddl-auto=update
+      - SPRING_DATASOURCE_USERNAME=${DATABASE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DATABASE_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/petcare
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       - database
     networks:
