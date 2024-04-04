@@ -1,6 +1,8 @@
 package com.cagataycuruk.petcarebackend.service;
 
 import com.cagataycuruk.petcarebackend.dto.PetDto;
+import com.cagataycuruk.petcarebackend.dto.request.CreatePetRequest;
+import com.cagataycuruk.petcarebackend.dto.request.UpdatePetRequest;
 import com.cagataycuruk.petcarebackend.entity.Pet;
 import com.cagataycuruk.petcarebackend.exception.PetNotFoundException;
 import com.cagataycuruk.petcarebackend.mapper.PetMapper;
@@ -8,7 +10,6 @@ import com.cagataycuruk.petcarebackend.repository.PetRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
@@ -28,9 +29,31 @@ public class PetService {
                 .orElseThrow(PetNotFoundException::new));
     }
 
-    public PetDto createPet(PetDto petDto) {
-        Pet petEntity = this.petRepository.save(petMapper.toPetEntity(petDto));
-        petRepository.save(petEntity);
-        return petDto;
+    public PetDto createPet(CreatePetRequest createPetRequest) {
+        Pet savedPet = this.petRepository.save(petMapper.createPetRequestToPetEntity(createPetRequest));
+
+        return PetDto.builder()
+                .name(savedPet.getName())
+                .age(savedPet.getAge())
+                .weight(savedPet.getWeight())
+                .height(savedPet.getHeight())
+                .gender(savedPet.getGender())
+                .photoUrl(savedPet.getPhotoUrl())
+                .build();
+    }
+
+    public PetDto updatePet(UUID petId, UpdatePetRequest updatePetRequest) {
+        Pet updatedPet = petRepository.findById(petId)
+                .map(pet -> {
+                    Pet petEntity = petMapper.updatePetRequestToPetEntity(updatePetRequest);
+                    return petRepository.save(petEntity);
+                })
+                .orElseThrow(PetNotFoundException::new);
+
+        return petMapper.toPetDto(updatedPet);
+    }
+
+    public void deletePet(UUID petId) {
+        petRepository.deleteById(petId);
     }
 }
