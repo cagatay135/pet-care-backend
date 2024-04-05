@@ -1,20 +1,19 @@
 package com.cagataycuruk.petcarebackend.entity;
 
+import com.cagataycuruk.petcarebackend.enums.FileType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "pet_photo")
+@Table(name = "pet_file")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor()
-public class PetPhoto {
+@AllArgsConstructor
+@Builder
+public class PetFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,8 +23,11 @@ public class PetPhoto {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Pet pet;
 
-    @Column(name = "photo_url")
-    private String photoUrl;
+    @Column(name = "file_url")
+    private String fileUrl;
+
+    @Enumerated(EnumType.STRING)
+    private FileType fileType;
 
     private String description;
 }

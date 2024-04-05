@@ -32,14 +32,7 @@ public class PetService {
     public PetDto createPet(CreatePetRequest createPetRequest) {
         Pet savedPet = this.petRepository.save(petMapper.createPetRequestToPetEntity(createPetRequest));
 
-        return PetDto.builder()
-                .name(savedPet.getName())
-                .age(savedPet.getAge())
-                .weight(savedPet.getWeight())
-                .height(savedPet.getHeight())
-                .gender(savedPet.getGender())
-                .photoUrl(savedPet.getPhotoUrl())
-                .build();
+        return petMapper.toPetDto(savedPet);
     }
 
     public PetDto updatePet(UUID petId, UpdatePetRequest updatePetRequest) {
