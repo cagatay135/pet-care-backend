@@ -21,7 +21,6 @@
 		<open-api.version>2.2.0</open-api.version>
 		<hibernate-validator.version>8.0.1.Final</hibernate-validator.version>
 		<aws-java-sdk-s3.version>1.12.693</aws-java-sdk-s3.version>
-		<aws-java-sdk-s3.version>1.12.693</aws-java-sdk-s3.version>
 		<jsonwebtoken.version>0.12.5</jsonwebtoken.version>
 	</properties>
 	<dependencies>
