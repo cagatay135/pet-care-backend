@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -45,11 +46,18 @@ public class PetController {
         return ResponseEntity.ok(petDto);
     }
 
-    @PostMapping(path = "/{petId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/{petId}/files/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PetFileDto> uploadFile(@PathVariable UUID petId,
                                                  @RequestParam("file") MultipartFile file,
                                                  @RequestParam("fileType") FileType fileType) throws IOException {
         PetFileDto petFileDto = petFileService.uploadPetFile(petId, file, fileType);
         return ResponseEntity.ok(petFileDto);
+    }
+
+    @GetMapping(path = "/{petId}/files")
+    public ResponseEntity<List<PetFileDto>> getPetFilesByType(@PathVariable UUID petId,
+                                                              @RequestParam("fileType") FileType fileType) {
+        List<PetFileDto> petFiles = petFileService.getPetFilesByType(petId, fileType);
+        return ResponseEntity.ok(petFiles);
     }
 }
